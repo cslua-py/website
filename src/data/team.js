@@ -8,7 +8,8 @@
 // - `degree` and `semester` are shown under the role as
 //   "Alumno del <semester> semestre de <degree>".
 // - `null` means "not provided yet": the profile hides that field.
-// - To add a photo, drop the image in public/team/ and set `photo` to its file name.
+// - To add a photo or avatar (JPG, PNG, WebP or SVG), drop it in public/team/ and set
+//   `photo` to its file name.
 // - `links` accepts any of: github, website, linkedin, instagram, dotfiles (full URLs).
 // - Custom profile pages (own component + stylesheet) are registered in
 //   src/pages/profiles/index.js; everyone else gets DefaultProfile.
@@ -22,7 +23,7 @@ export const TEAM = [
     group: "coordinators",
     name: "Fede Barrios",
     role: "Coordinador General",
-    photo: null,
+    photo: "fede.svg",
     degree: "Ingeniería en Informática",
     semester: "noveno",
     distro: "Garuda Linux",

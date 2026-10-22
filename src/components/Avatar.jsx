@@ -12,7 +12,7 @@ export default function Avatar({ member, size = "md" }) {
       <img
         className={`avatar avatar-${size}`}
         src={`${import.meta.env.BASE_URL}team/${member.photo}`}
-        alt={`Foto de ${member.name}`}
+        alt={`Imagen de perfil de ${member.name}`}
       />
     );
   }
