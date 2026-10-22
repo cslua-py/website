@@ -8,9 +8,8 @@ export const JOIN_FORM_URL = "https://forms.gle/4vNJv9Qx4FTQhSeJ7";
 export const COMMUNITY_URL = "https://chat.whatsapp.com/D2v1tBN5niC2f48bzl6TBC";
 
 // Source code repository. The AGPL (section 13) requires offering the source to users
-// who interact with the site over a network: set this to the club's GitHub repository
-// as soon as it exists. While empty, the footer hides the "Código fuente" link.
-export const SOURCE_URL = "";
+// who interact with the site over a network, so the footer links here.
+export const SOURCE_URL = "https://github.com/CSLUA-py/website";
 
 export const LICENSE = {
   name: "AGPL-3.0",

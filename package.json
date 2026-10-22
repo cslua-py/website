@@ -4,6 +4,10 @@
   "version": "0.1.0",
   "license": "AGPL-3.0-or-later",
   "author": "Fede Barrios",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CSLUA-py/website.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
