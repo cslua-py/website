@@ -10,7 +10,9 @@
 // - `null` means "not provided yet": the profile hides that field.
 // - To add a photo, drop the image in public/team/ and set `photo` to its file name.
 // - `links` accepts any of: github, website, linkedin, dotfiles (full URLs).
-// - `theme` (optional) overrides the site's CSS variables on that member's profile
+// - Custom profile pages (own component + stylesheet) are registered in
+//   src/pages/profiles/index.js; everyone else gets DefaultProfile.
+// - `theme` (optional, DefaultProfile only) overrides the site's CSS variables on that member's profile
 //   page only. Available variables: --ink, --ink-soft, --amber, --amber-deep,
 //   --on-amber, --paper, --paper-alt, --card, --line.
 //   Profile pages use the sans-serif font; the rest of the site is serif.
@@ -35,18 +37,7 @@ export const TEAM = [
       linkedin: null,
       dotfiles: null,
     },
-    // Gruvbox dark
-    theme: {
-      "--ink": "#ebdbb2",
-      "--ink-soft": "#a89984",
-      "--amber": "#fabd2f",
-      "--amber-deep": "#fe8019",
-      "--on-amber": "#282828",
-      "--paper": "#282828",
-      "--paper-alt": "#32302f",
-      "--card": "#3c3836",
-      "--line": "#504945",
-    },
+    theme: null,
   },
   {
     slug: "benjamin",

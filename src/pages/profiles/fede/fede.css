@@ -1,0 +1,169 @@
+/* Fede's profile: a Hyprland desktop in Gruvbox dark. Everything is scoped to .fede. */
+.fede {
+  --bg-h: #1d2021;
+  --bg: #282828;
+  --bg1: #3c3836;
+  --bg2: #504945;
+  --fg: #ebdbb2;
+  --gray: #928374;
+  --red: #fb4934;
+  --green: #b8bb26;
+  --yellow: #fabd2f;
+  --blue: #83a598;
+  --orange: #fe8019;
+  --term: #3e3e38;
+  --olive: #98971a;
+  --logo: #d65d0e;
+  --mono: "JetBrains Mono", "Fira Code", ui-monospace, Menlo, Consolas, monospace;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 100dvh;
+  padding: 10px;
+  background: radial-gradient(circle at 18% 12%, #3c3836 0%, #282828 38%, #1d2021 100%);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: .9rem;
+  line-height: 1.55;
+}
+.fede a { color: var(--blue); text-decoration-color: var(--bg2); text-underline-offset: 3px; }
+.fede a:hover { color: var(--yellow); }
+.fede :focus-visible { outline: 2px solid var(--yellow); outline-offset: 2px; }
+.fede p, .fede dl, .fede dd, .fede ul, .fede ol { margin: 0; padding: 0; }
+.fede ul, .fede ol { list-style: none; }
+
+/* Waybar */
+.fede-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 4px 6px; background: rgba(29, 32, 33, .92);
+  border: 2px solid var(--bg1); border-radius: 10px; font-size: .82rem;
+}
+.fede-bar-left, .fede-bar-right { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.fede-back { padding: 2px 10px; text-decoration: none; }
+.fede-ws-btn {
+  background: none; border: 0; border-radius: 6px; padding: 2px 10px; color: var(--gray);
+  font: inherit; cursor: pointer;
+}
+.fede-ws-btn:hover { color: var(--fg); background: var(--bg1); }
+.fede-ws-btn[aria-pressed="true"] { background: var(--yellow); color: var(--bg-h); font-weight: 700; }
+.fede-bar-title { color: var(--gray); }
+.fede-mod { padding: 2px 10px; border-radius: 6px; background: var(--bg1); }
+.fede-clock { color: var(--yellow); font-weight: 700; }
+
+/* Tiled windows */
+.fede-ws { flex: 1; display: grid; gap: 10px; min-height: 0; }
+.fede-ws-1 {
+  grid-template-columns: 1.55fr 1fr;
+  grid-template-rows: 1.4fr 1fr;
+  grid-template-areas: "term about" "term palette";
+}
+.fede-ws-2 { grid-template-columns: 1.4fr 1fr; grid-template-areas: "links club"; }
+.fede-term { grid-area: term; }
+.fede-about { grid-area: about; }
+.fede-palette { grid-area: palette; }
+.fede-links { grid-area: links; }
+.fede-club { grid-area: club; }
+
+.fede-win {
+  display: flex; flex-direction: column; min-height: 0; border: 2px solid transparent; border-radius: 10px;
+  --win-bg: var(--bg-h);
+  background: linear-gradient(var(--win-bg), var(--win-bg)) padding-box, linear-gradient(var(--bg1), var(--bg1)) border-box;
+  overflow: hidden; transition: background .15s;
+}
+/* Hyprland's active border: a diagonal gradient that follows focus (and the mouse). */
+.fede-term, .fede-links { --win-bg: var(--term); }
+.fede-win[data-focused="true"] {
+  background: linear-gradient(var(--win-bg), var(--win-bg)) padding-box,
+    linear-gradient(45deg, var(--yellow), var(--orange) 55%, var(--red)) border-box;
+}
+.fede-win-body { flex: 1; min-height: 0; padding: 14px 16px; overflow: auto; }
+
+/* Terminal (fastfetch + starship) */
+.fede-term .fede-win-body, .fede-links .fede-win-body { position: relative; padding: 0; }
+.fede-term-main { padding: 12px 18px 16px; }
+.fede-green { color: #b8bb26; font-weight: 700; }
+.fede-yellow { color: #d79921; font-weight: 700; }
+.fede-purple { color: #b16286; }
+
+.fede-fetch { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 4px 32px; margin: 4px 0 14px; font-size: .8rem; }
+.fede-logo { margin: 0; color: var(--logo); font: inherit; line-height: 1.35; white-space: pre; overflow-x: auto; max-width: 100%; }
+.fede-info { min-width: 0; }
+.fede-fetch-head { font-weight: 700; }
+.fede-rule { color: var(--fg); }
+.fede-fetch dl > div { display: flex; gap: 8px; }
+.fede-fetch dt { color: var(--olive); font-weight: 700; white-space: nowrap; }
+.fede-fetch dd { min-width: 0; overflow-wrap: anywhere; }
+.fede-ansi { margin-top: 16px; }
+.fede-ansi ul { display: flex; }
+.fede-ansi li { width: 24px; height: 18px; }
+.fede-starship p { margin-bottom: 2px; }
+.fede-comment { color: var(--gray); font-style: italic; }
+.fede-typed { white-space: pre-wrap; overflow-wrap: anywhere; }
+.fede-starship + .fede-starship { margin-top: 2px; }
+.fede-cmd-name { color: #f5c2e7; }
+.fede-cmd-path { color: #f2cdcd; text-decoration: underline; text-underline-offset: 2px; }
+
+/* bat, "full" style (colors sampled from Fede's terminal) */
+.fede-bat { --rule: #839496; margin: 6px 0 8px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); font-size: .8rem; }
+.fede-bat-row { display: grid; grid-template-columns: 3.4ch minmax(0, 1fr); color: #fff; }
+.fede-bat-num { padding-right: 1ch; text-align: right; color: var(--rule); border-right: 1px solid var(--rule); user-select: none; }
+.fede-bat-text { padding-left: 1.4ch; white-space: pre-wrap; overflow-wrap: anywhere; }
+.fede-bat-header { border-bottom: 1px solid var(--rule); }
+.fede-bat-header > span { padding-block: .6em; }
+.fede-bat-header .fede-bat-text { color: #ebdbb2; }
+.fede-bat-header + .fede-bat-row > span { padding-top: .6em; }
+.fede-bat-row:last-child > span { padding-bottom: .6em; }
+
+.fede-cursor.fede-cursor-hollow { background: transparent; outline: 1px solid var(--fg); outline-offset: -1px; animation: none; }
+.fede-insert { color: var(--yellow); font-weight: 700; }
+.fede-cursor { display: inline-block; width: .6em; height: 1.1em; vertical-align: text-bottom; background: var(--fg); animation: fede-blink 1.1s steps(1) infinite; }
+@keyframes fede-blink { 50% { opacity: 0; } }
+
+/* nvim-like buffers */
+.fede-lines { counter-reset: line; }
+.fede-lines li { counter-increment: line; display: flex; gap: 14px; min-height: 1.55em; }
+.fede-lines li::before { content: counter(line); min-width: 1.5ch; text-align: right; color: var(--bg2); }
+.fede-h { color: var(--orange); font-weight: 700; }
+.fede-statusline { margin: 12px -16px -14px; padding: 3px 16px; background: var(--bg1); color: var(--gray); font-size: .78rem; }
+.fede-about .fede-win-body, .fede-club .fede-win-body, .fede-palette .fede-win-body { display: flex; flex-direction: column; }
+.fede-about .fede-lines, .fede-club .fede-lines { flex: 1; }
+.fede-mode { display: inline-block; padding: 0 8px; margin-right: 8px; background: var(--green); color: var(--bg-h); font-weight: 700; }
+
+/* Palette */
+.fede-palette-groups { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+.fede-palette-groups .fede-comment { margin: 0 0 8px; font-size: .78rem; }
+.fede-swatches { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 14px; }
+.fede-swatches li { display: grid; grid-template-columns: auto 1fr; column-gap: 8px; align-items: center; }
+.fede-swatch { grid-row: span 2; width: 22px; height: 22px; border-radius: 5px; border: 1px solid var(--bg2); }
+.fede-swatch-name { line-height: 1.1; }
+.fede-swatch-hex { line-height: 1.1; color: var(--gray); font-size: .75rem; }
+
+/* ls output */
+.fede-ls li { margin-bottom: 4px; }
+.fede-perm { color: var(--gray); }
+.fede-arrow { color: var(--gray); }
+
+/* Status line (also carries the AGPL notice and the source link) */
+.fede-status {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 3px 0 3px 0;
+  background: var(--bg1); border-radius: 6px; font-size: .8rem; overflow: hidden;
+}
+.fede-status > .fede-mode { margin: 0; padding: 3px 12px; background: var(--yellow); }
+.fede-status-right { margin-left: auto; display: flex; flex-wrap: wrap; gap: 4px 16px; padding-right: 12px; color: var(--gray); }
+
+@media (min-width: 861px) {
+  .fede { height: 100dvh; }
+}
+@media (max-width: 860px) {
+  .fede-swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fede-ws-1, .fede-ws-2 { display: flex; flex-direction: column; }
+  .fede-win-body { overflow: visible; }
+  .fede-bar { justify-content: flex-start; }
+  .fede-bar-title { display: none; }
+  .fede-status-right { margin-left: 0; padding-left: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fede-cursor { animation: none; }
+  .fede-win { transition: none; }
+}
