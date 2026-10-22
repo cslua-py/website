@@ -86,6 +86,9 @@ h3 { font-size: 1.25rem; margin: 36px 0 14px; }
 .num { font-weight: 800; color: var(--amber-deep); }
 
 .panel p { margin: 0 0 16px; }
+.credit { display: flex; align-items: center; flex-wrap: wrap; gap: 20px; }
+.credit img { width: 96px; height: 96px; flex: none; }
+.credit p { margin: 0; flex: 1 1 18rem; }
 .inline-link { font-weight: 700; text-decoration: none; background: linear-gradient(transparent 62%, var(--amber) 62%); }
 .inline-link:hover { background: var(--amber); color: var(--on-amber); }
 .steps { padding-left: 1.2em; margin: 0 0 20px; }

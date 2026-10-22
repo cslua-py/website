@@ -14,6 +14,7 @@ const LINK_LABELS = {
   github: "GitHub",
   website: "Sitio web",
   linkedin: "LinkedIn",
+  instagram: "Instagram",
   dotfiles: "Dotfiles",
 };
 

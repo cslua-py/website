@@ -1,4 +1,5 @@
 import PageHead from "../components/PageHead.jsx";
+import logo from "../assets/logo.svg";
 import usePageTitle from "../components/usePageTitle.js";
 
 const OBJECTIVES = [
@@ -44,6 +45,14 @@ export default function About() {
               </li>
             ))}
           </ul>
+          <h2 className="h-sub">Nuestro logo</h2>
+          <div className="panel credit">
+            <img src={logo} alt="Logo del CSLUA: un tucán" width="96" height="96" />
+            <p>
+              El tucán que nos representa fue creado por <strong>Adrián Cardozo</strong>, que nos dio
+              su permiso expreso para usarlo como imagen del club. ¡Gracias!
+            </p>
+          </div>
         </div>
       </section>
     </>

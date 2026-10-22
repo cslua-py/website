@@ -9,7 +9,7 @@
 //   "Alumno del <semester> semestre de <degree>".
 // - `null` means "not provided yet": the profile hides that field.
 // - To add a photo, drop the image in public/team/ and set `photo` to its file name.
-// - `links` accepts any of: github, website, linkedin, dotfiles (full URLs).
+// - `links` accepts any of: github, website, linkedin, instagram, dotfiles (full URLs).
 // - Custom profile pages (own component + stylesheet) are registered in
 //   src/pages/profiles/index.js; everyone else gets DefaultProfile.
 // - `theme` (optional, DefaultProfile only) overrides the site's CSS variables on that member's profile
@@ -35,6 +35,7 @@ export const TEAM = [
       github: null,
       website: "https://fedebarriosd.com",
       linkedin: null,
+      instagram: null,
       dotfiles: null,
     },
     theme: null,
@@ -53,7 +54,7 @@ export const TEAM = [
     terminal: null,
     hardware: null,
     peripherals: null,
-    links: { github: null, website: null, linkedin: null, dotfiles: null },
+    links: { github: null, website: null, linkedin: null, instagram: null, dotfiles: null },
     theme: null,
   },
   {
@@ -61,16 +62,22 @@ export const TEAM = [
     group: "coordinators",
     name: "Pablo Ayala",
     role: "Coordinador Técnico",
-    photo: null,
+    photo: "pablo.jpg",
     degree: "Ingeniería en Informática",
     semester: "noveno",
-    distro: "Ubuntu",
-    desktop: null,
+    distro: "Ubuntu + Windows 11",
+    desktop: "GNOME",
     editor: null,
     terminal: null,
-    hardware: null,
+    hardware: "Intel Core i7 (11.ª gen), 24 GB de RAM, RTX 3050 Ti",
     peripherals: null,
-    links: { github: null, website: null, linkedin: null, dotfiles: null },
+    links: {
+      github: "https://github.com/Edgar-Ayala",
+      website: null,
+      linkedin: "https://www.linkedin.com/in/edgar-pablo-ayala-lerea",
+      instagram: "https://www.instagram.com/pablo_ayala001/",
+      dotfiles: null,
+    },
     theme: null,
   },
   {
@@ -87,7 +94,7 @@ export const TEAM = [
     terminal: null,
     hardware: null,
     peripherals: null,
-    links: { github: null, website: null, linkedin: null, dotfiles: null },
+    links: { github: null, website: null, linkedin: null, instagram: null, dotfiles: null },
     theme: null,
   },
   {
@@ -104,7 +111,7 @@ export const TEAM = [
     terminal: null,
     hardware: null,
     peripherals: null,
-    links: { github: null, website: null, linkedin: null, dotfiles: null },
+    links: { github: null, website: null, linkedin: null, instagram: null, dotfiles: null },
     theme: null,
   },
 ];
