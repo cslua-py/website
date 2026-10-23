@@ -71,21 +71,21 @@ Todo está en [`src/data/team.js`](src/data/team.js). Cada integrante es un obje
 
 ```js
 {
-  slug: "pablo",                      // la URL será /team/pablo
+  slug: "Alucard",                      // la URL será /team/alucard
   group: "coordinators",              // "coordinators" o "collaborators"
-  name: "Pablo Ayala",
-  role: "Coordinador Técnico",        // null para colaboradores
-  photo: "pablo.jpg",                 // archivo dentro de public/team/, o null
-  degree: "Ingeniería en Informática",
-  semester: "noveno",                 // se muestra "Alumno del noveno semestre de …"
-  distro: "Ubuntu + Windows 11",
-  desktop: "GNOME",
-  editor: null,                       // null = no se muestra
-  terminal: null,
+  name: "Alucard el gato",
+  role: "Coordinador Gatuno",        // null para colaboradores
+  photo: "alucard.jpg",                 // archivo dentro de public/team/, o null
+  degree: "Licenciado en maullar",
+  semester: "segundo",                 // se muestra "Alumno del segundo semestre de …"
+  distro: "Void linux",
+  desktop: "XFCE",
+  editor: GNU Emacs,                       // null = no se muestra
+  terminal: Kitty,
   hardware: { Laptop: "…", Procesador: "…" },   // objeto etiqueta → valor, o texto, o null
   peripherals: null,                  // igual que hardware
   links: { github: "https://…", linkedin: null, instagram: null, website: null, dotfiles: null },
-  theme: null,
+  theme: catppuccin,
 }
 ```
 
