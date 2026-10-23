@@ -18,6 +18,10 @@ const LINK_LABELS = {
   dotfiles: "Dotfiles",
 };
 
+// A field is either text or an object of label -> value (e.g. `peripherals`).
+const formatField = (value) =>
+  typeof value === "object" ? Object.entries(value).map(([k, v]) => `${k}: ${v}`).join(" · ") : value;
+
 export default function DefaultProfile({ member }) {
   const fields = FIELDS.filter(([key]) => member[key]);
   const links = Object.entries(member.links).filter(([, url]) => url);
@@ -51,7 +55,7 @@ export default function DefaultProfile({ member }) {
                 {fields.map(([key, label]) => (
                   <div key={key}>
                     <dt>{label}</dt>
-                    <dd>{member[key]}</dd>
+                    <dd>{formatField(member[key])}</dd>
                   </div>
                 ))}
               </dl>

@@ -10,6 +10,9 @@
 // - `null` means "not provided yet": the profile hides that field.
 // - To add a photo or avatar (JPG, PNG, WebP or SVG), drop it in public/team/ and set
 //   `photo` to its file name.
+// - `hardware` and `peripherals` are objects of label -> value (e.g. `{ Teclado: "...", Mouse: "..." }`;
+//   quote labels with spaces). Plain text also works on the default profile, but custom
+//   profile pages like Fede's list them row by row, so prefer the object.
 // - `links` accepts any of: github, website, linkedin, instagram, dotfiles (full URLs).
 // - Custom profile pages (own component + stylesheet) are registered in
 //   src/pages/profiles/index.js; everyone else gets DefaultProfile.
@@ -30,13 +33,25 @@ export const TEAM = [
     desktop: "Hyprland",
     editor: null,
     terminal: null,
-    hardware: null,
-    peripherals: null,
+    hardware: {
+      Laptop: "ASUS Vivobook 14",
+      Procesador: "AMD Ryzen AI 7 350",
+      Gráficos: "AMD Radeon 860M Graphics",
+      Memoria: "15,09 GiB",
+      Pantalla: "1920x1200",
+      Almacenamiento: "476,9 GiB",
+    },
+    peripherals: {
+      Teclado: "Keychron K3 Max",
+      Mouse: "Keychron M6",
+      Auriculares: "JBL Tune 770NC",
+      "Adaptador de red": "AR9271",
+    },
     links: {
-      github: null,
+      github: "https://github.com/Fedebarriosd",
       website: "https://fedebarriosd.com",
-      linkedin: null,
-      instagram: null,
+      linkedin: "https://www.linkedin.com/in/federico-barrios-3ab481416",
+      instagram: "https://www.instagram.com/fedebarriosd",
       dotfiles: null,
     },
     theme: null,
@@ -55,7 +70,13 @@ export const TEAM = [
     terminal: null,
     hardware: null,
     peripherals: null,
-    links: { github: null, website: null, linkedin: null, instagram: null, dotfiles: null },
+    links: {
+      github: null,
+      website: null,
+      linkedin: null,
+      instagram: null,
+      dotfiles: null,
+    },
     theme: null,
   },
   {
@@ -95,7 +116,13 @@ export const TEAM = [
     terminal: null,
     hardware: null,
     peripherals: null,
-    links: { github: null, website: null, linkedin: null, instagram: null, dotfiles: null },
+    links: {
+      github: null,
+      website: null,
+      linkedin: null,
+      instagram: null,
+      dotfiles: null,
+    },
     theme: null,
   },
   {
@@ -112,7 +139,13 @@ export const TEAM = [
     terminal: null,
     hardware: null,
     peripherals: null,
-    links: { github: null, website: null, linkedin: null, instagram: null, dotfiles: null },
+    links: {
+      github: null,
+      website: null,
+      linkedin: null,
+      instagram: null,
+      dotfiles: null,
+    },
     theme: null,
   },
 ];

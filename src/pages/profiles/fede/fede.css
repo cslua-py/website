@@ -55,15 +55,23 @@
 .fede-ws { flex: 1; display: grid; gap: 10px; min-height: 0; }
 .fede-ws-1 {
   grid-template-columns: 1.55fr 1fr;
-  grid-template-rows: 1.4fr 1fr;
+  grid-template-rows: 2fr 1fr;
   grid-template-areas: "term about" "term palette";
 }
-.fede-ws-2 { grid-template-columns: 1.4fr 1fr; grid-template-areas: "links club"; }
+.fede-ws-2 {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: 1.4fr 1fr;
+}
 .fede-term { grid-area: term; }
 .fede-about { grid-area: about; }
 .fede-palette { grid-area: palette; }
-.fede-links { grid-area: links; }
-.fede-club { grid-area: club; }
+/* Workspace 2 uses 12 columns so the bottom row can split at a different point than the top one. */
+.fede-links { grid-area: 1 / 1 / 2 / 8; }
+.fede-media { grid-area: 1 / 8 / 2 / 13; }
+.fede-hardware { grid-area: 2 / 1 / 3 / 13; }
+.fede-ws-2-split .fede-hardware { grid-area: 2 / 1 / 3 / 6; }
+.fede-peripherals { grid-area: 2 / 6 / 3 / 13; }
+.fede-ws-2:not(.fede-ws-2-split) .fede-peripherals { grid-area: 2 / 1 / 3 / 13; }
 
 .fede-win {
   display: flex; flex-direction: column; min-height: 0; border: 2px solid transparent; border-radius: 10px;
@@ -72,16 +80,19 @@
   overflow: hidden; transition: background .15s;
 }
 /* Hyprland's active border: a diagonal gradient that follows focus (and the mouse). */
-.fede-term, .fede-links { --win-bg: var(--term); }
 .fede-win[data-focused="true"] {
+  --win-bg: var(--term);
   background: linear-gradient(var(--win-bg), var(--win-bg)) padding-box,
     linear-gradient(45deg, var(--yellow), var(--orange) 55%, var(--red)) border-box;
 }
 .fede-win-body { flex: 1; min-height: 0; padding: 14px 16px; overflow: auto; }
 
 /* Terminal (fastfetch + starship) */
-.fede-term .fede-win-body, .fede-links .fede-win-body { position: relative; padding: 0; }
+.fede-term .fede-win-body, .fede-links .fede-win-body, .fede-media .fede-win-body { position: relative; padding: 0; }
 .fede-term-main { padding: 12px 18px 16px; }
+/* kitten icat: the picture sits under the prompt, scaled to the room left in the window. */
+.fede-media-main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.fede-media-img { flex: 1; min-height: 0; width: 100%; margin: 4px 0; object-fit: contain; object-position: left top; }
 .fede-green { color: #b8bb26; font-weight: 700; }
 .fede-yellow { color: #d79921; font-weight: 700; }
 .fede-purple { color: #b16286; }
@@ -126,8 +137,10 @@
 .fede-lines li::before { content: counter(line); min-width: 1.5ch; text-align: right; color: var(--bg2); }
 .fede-h { color: var(--orange); font-weight: 700; }
 .fede-statusline { margin: 12px -16px -14px; padding: 3px 16px; background: var(--bg1); color: var(--gray); font-size: .78rem; }
-.fede-about .fede-win-body, .fede-club .fede-win-body, .fede-palette .fede-win-body { display: flex; flex-direction: column; }
-.fede-about .fede-lines, .fede-club .fede-lines { flex: 1; }
+.fede-win[data-focused="true"] .fede-statusline { background: var(--bg-h); }
+.fede-about .fede-win-body, .fede-media .fede-win-body, .fede-palette .fede-win-body, .fede-hardware .fede-win-body, .fede-peripherals .fede-win-body { display: flex; flex-direction: column; }
+.fede-about .fede-lines, .fede-hardware .fede-lines, .fede-peripherals .fede-lines { flex: 1; }
+.fede-key { min-width: var(--key-width, 12ch); color: var(--olive); font-weight: 700; }
 .fede-mode { display: inline-block; padding: 0 8px; margin-right: 8px; background: var(--green); color: var(--bg-h); font-weight: 700; }
 
 /* Palette */
@@ -159,6 +172,7 @@
   .fede-swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .fede-ws-1, .fede-ws-2 { display: flex; flex-direction: column; }
   .fede-win-body { overflow: visible; }
+  .fede-media-img { flex: none; width: auto; max-width: 100%; max-height: 70vh; }
   .fede-bar { justify-content: flex-start; }
   .fede-bar-title { display: none; }
   .fede-status-right { margin-left: 0; padding-left: 12px; }

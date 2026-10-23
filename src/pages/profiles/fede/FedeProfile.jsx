@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { AUTHOR, LICENSE, SOURCE_URL } from "../../../config.js";
 import { GARUDA_LOGO } from "./garuda-logo.js";
+import selfie from "./selfie.webp";
 import "./fede.css";
 
 // What `fastfetch` prints on Fede's laptop (snapshot copied from the real terminal).
@@ -20,6 +21,12 @@ const FETCH = [
   ["GPU", "AMD Radeon 860M Graphics"],
   ["Memory", "2150MiB / 15090MiB"],
 ];
+
+// `hardware` and `peripherals` in team.js are objects of label -> value (plain text is ignored here).
+const rowsOf = (value) => (value && typeof value === "object" ? Object.entries(value) : []);
+
+// Width of the label column in the key/value windows: the longest label plus a gap.
+const keyColumn = (rows) => ({ "--key-width": `${Math.max(...rows.map(([key]) => key.length)) + 2}ch` });
 
 const LINK_LABELS = {
   github: "github",
@@ -51,7 +58,7 @@ const HELP_LINES = [
   "Esc         salir del modo insert (hacelo primero)",
   "i, Enter    escribir en la terminal",
   "h j k l     moverte entre ventanas",
-  "1, 2        cambiar de workspace (el 2 tiene mis links)",
+  "1, 2        cambiar de workspace (el 2 tiene mis links, mi foto y mi setup)",
   "← equipo    volver al equipo (barra de arriba)",
 ];
 const MAX_LINE = 300;
@@ -85,7 +92,7 @@ function pickNeighbor(rects, currentId, direction) {
 
 const WORKSPACES = [
   { id: 1, name: "~", firstWindow: "term" },
-  { id: 2, name: "links", firstWindow: "links" },
+  { id: 2, name: "setup", firstWindow: "links" },
 ];
 
 const WINDOW_TITLES = {
@@ -93,7 +100,9 @@ const WINDOW_TITLES = {
   about: "nvim about.md",
   palette: "nvim colors.lua",
   links: "fish",
-  club: "nvim cslua.md",
+  media: "media",
+  hardware: "nvim hardware.md",
+  peripherals: "nvim peripherals.md",
 };
 
 function useClock() {
@@ -117,6 +126,25 @@ function Win({ id, title, focus, onHover, register, children }) {
     >
       <div className="fede-win-body">{children}</div>
     </section>
+  );
+}
+
+// An nvim buffer listing label/value rows, e.g. the hardware and peripherals windows.
+function KeyValueWin({ id, heading, file, rows, ...win }) {
+  return (
+    <Win id={id} title={WINDOW_TITLES[id]} {...win}>
+      <ol className="fede-lines" style={keyColumn(rows)}>
+        <li><span className="fede-h">{`# ${heading}`}</span></li>
+        <li />
+        {rows.map(([key, value]) => (
+          <li key={key}><span className="fede-key">{key}</span><span>{value}</span></li>
+        ))}
+        <li />
+      </ol>
+      <p className="fede-statusline">
+        <span className="fede-mode">NORMAL</span> {file}
+      </p>
+    </Win>
   );
 }
 
@@ -210,6 +238,8 @@ export default function FedeProfile({ member }) {
   const now = useClock();
 
   const links = Object.entries(member.links).filter(([, url]) => url);
+  const hardware = rowsOf(member.hardware);
+  const peripherals = rowsOf(member.peripherals);
   const typing = workspace === 1 && focus === "term" && mode === "insert";
 
   const register = (id, el) => {
@@ -372,7 +402,16 @@ export default function FedeProfile({ member }) {
                 <li>Alumno del {member.semester} semestre de {member.degree}.</li>
               )}
               <li />
-              <li className="fede-comment">-- Garuda + Hyprland + Gruvbox</li>
+              <li><span className="fede-h">## Qué es esto</span></li>
+              <li>
+                Lo que estás viendo es, grosso modo, como yo uso mi computadora todos los días. Parte de la personalidad de uno se plasma en su entorno donde pasa la mayor parte del tiempo, y eso habla más de uno mismo de lo que se podría pensar en un primer momento. Una buena porción de la motivación viene dada por un entorno lindo, agradable y cómodo, y este es el mío.
+              </li>
+              <li />
+              <li><span className="fede-h">## Por qué el club</span></li>
+              <li>
+                Llegado cierto punto noté una contradicción importante: gran parte de la informática tal y como la conocemos se basa en proyectos o herramientas libres; sin embargo, a nivel académico prácticamente no se hace mención de ellas, y no había ningún motivo aparente por el cual hacerlas de lado. El CSLUA cubre (o intenta cubrir) ese hueco.
+              </li>
+              <li />
             </ol>
             <p className="fede-statusline">
               <span className="fede-mode">NORMAL</span> about.md
@@ -389,7 +428,7 @@ export default function FedeProfile({ member }) {
       )}
 
       {workspace === 2 && (
-        <div className="fede-ws fede-ws-2">
+        <div className={`fede-ws fede-ws-2${hardware.length > 0 && peripherals.length > 0 ? " fede-ws-2-split" : ""}`}>
           <Win id="links" title={WINDOW_TITLES.links} focus={focus} onHover={hover} register={register}>
             <div className="fede-term-main">
               <Starship command="ls -l ~/links" highlight />
@@ -399,7 +438,7 @@ export default function FedeProfile({ member }) {
                     <li key={key}>
                       <span className="fede-perm">lrwxrwxrwx</span>{" "}
                       <a href={url} target="_blank" rel="noopener noreferrer">{LINK_LABELS[key]}</a>
-                      <span className="fede-arrow"> → {url.replace(/^https?:\/\//, "")}</span>
+                      <span className="fede-arrow"> → {url.replace(/^https?:\/\/(www\.)?/, "")}</span>
                     </li>
                   ))}
                 </ul>
@@ -410,19 +449,21 @@ export default function FedeProfile({ member }) {
             </div>
           </Win>
 
-          <Win id="club" title={WINDOW_TITLES.club} focus={focus} onHover={hover} register={register}>
-            <ol className="fede-lines">
-              <li><span className="fede-h"># CSLUA</span></li>
-              <li />
-              <li>Club de Software Libre de la Universidad Americana.</li>
-              <li />
-              <li><Link to="/join">[afiliarse al club]</Link></li>
-              <li><Link to="/team">[conocer al resto del equipo]</Link></li>
-            </ol>
-            <p className="fede-statusline">
-              <span className="fede-mode">NORMAL</span> cslua.md
-            </p>
+          <Win id="media" title={WINDOW_TITLES.media} focus={focus} onHover={hover} register={register}>
+            <div className="fede-term-main fede-media-main">
+              <Starship command="kitten icat selfie.png" highlight />
+              <img className="fede-media-img" src={selfie} alt="Foto de Fede Barrios" />
+              <Starship command="" cursor="hollow" />
+            </div>
           </Win>
+
+          {hardware.length > 0 && (
+            <KeyValueWin id="hardware" heading="Hardware" file="hardware.md" rows={hardware} focus={focus} onHover={hover} register={register} />
+          )}
+
+          {peripherals.length > 0 && (
+            <KeyValueWin id="peripherals" heading="Periféricos" file="peripherals.md" rows={peripherals} focus={focus} onHover={hover} register={register} />
+          )}
         </div>
       )}
 

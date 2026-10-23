@@ -13,7 +13,7 @@ export const SOURCE_URL = "https://github.com/CSLUA-py/website";
 
 export const LICENSE = {
   name: "AGPL-3.0",
-  url: "https://www.gnu.org/licenses/agpl-3.0.html",
+  url: `${SOURCE_URL}/blob/main/LICENSE`,
 };
 
 export const AUTHOR = {

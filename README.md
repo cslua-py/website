@@ -82,14 +82,15 @@ Todo está en [`src/data/team.js`](src/data/team.js). Cada integrante es un obje
   desktop: "GNOME",
   editor: null,                       // null = no se muestra
   terminal: null,
-  hardware: "…",
-  peripherals: null,
+  hardware: { Laptop: "…", Procesador: "…" },   // objeto etiqueta → valor, o texto, o null
+  peripherals: null,                  // igual que hardware
   links: { github: "https://…", linkedin: null, instagram: null, website: null, dotfiles: null },
   theme: null,
 }
 ```
 
 - Los campos en `null` simplemente no se muestran.
+- `hardware` y `peripherals` pueden ser un objeto `{ Etiqueta: "valor" }` (las etiquetas con espacios van entre comillas: `"Adaptador de red": "…"`) o un texto. En un perfil propio como el de Fede se muestran fila por fila, así que ahí conviene el objeto.
 - **Fotos:** guardalas en `public/team/`, cuadradas (unos 512 px) y livianas (JPG o WebP, idealmente menos de 100 kB). Sin foto, se muestran las iniciales.
 - Los integrantes aparecen en el orden en que están en el archivo, dentro de su grupo.
 
