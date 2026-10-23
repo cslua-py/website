@@ -24,7 +24,7 @@ export default function Home() {
             </h1>
             <p className="lead">
               Un espacio de estudiantes para estudiantes de todas las carreras: aprendemos,
-              compartimos y construimos con tecnologías abiertas.
+              compartimos y construimos con tecnologías libres.
             </p>
             <div className="cta">
               <Link className="btn" to="/join">Quiero afiliarme</Link>

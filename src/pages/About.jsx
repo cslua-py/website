@@ -2,6 +2,11 @@ import PageHead from "../components/PageHead.jsx";
 import logo from "../assets/logo.svg";
 import usePageTitle from "../components/usePageTitle.js";
 
+const GENERAL_OBJECTIVE = [
+  "Objetivo general",
+  "Promover el estudio, investigación, difusión, filosofía y aplicación del software libre dentro de la comunidad universitaria.",
+];
+
 const OBJECTIVES = [
   ["Herramientas libres", "Fomentar el uso de herramientas y sistemas de software libre."],
   ["Aprender haciendo", "Talleres, seminarios, conferencias y cursos."],
@@ -37,6 +42,11 @@ export default function About() {
           </div>
           <h2 className="h-sub">Nuestros objetivos</h2>
           <ul className="cards">
+            <li className="wide">
+              <span className="num">00</span>
+              <h4>{GENERAL_OBJECTIVE[0]}</h4>
+              <p>{GENERAL_OBJECTIVE[1]}</p>
+            </li>
             {OBJECTIVES.map(([title, text], i) => (
               <li key={title}>
                 <span className="num">{String(i + 1).padStart(2, "0")}</span>
