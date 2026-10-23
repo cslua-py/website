@@ -80,8 +80,8 @@ Todo está en [`src/data/team.js`](src/data/team.js). Cada integrante es un obje
   semester: "segundo",                 // se muestra "Alumno del segundo semestre de …"
   distro: "Void linux",
   desktop: "XFCE",
-  editor: GNU Emacs,                       // null = no se muestra
-  terminal: Kitty,
+  editor: "GNU Emacs",                       // null = no se muestra
+  terminal: "Kitty",
   hardware: { Laptop: "…", Procesador: "…" },   // objeto etiqueta → valor, o texto, o null
   peripherals: null,                  // igual que hardware
   links: { github: "https://…", linkedin: null, instagram: null, website: null, dotfiles: null },
