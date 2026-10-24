@@ -1,4 +1,4 @@
-import { AUTHOR, LICENSE, SOURCE_URL } from "../config.js";
+import { AUTHOR, INSTAGRAM_URL, LICENSE, SOURCE_URL } from "../config.js";
 
 export default function Footer() {
   return (

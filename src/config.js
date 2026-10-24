@@ -11,6 +11,9 @@ export const COMMUNITY_URL = "https://chat.whatsapp.com/D2v1tBN5niC2f48bzl6TBC";
 // who interact with the site over a network, so the footer links here.
 export const SOURCE_URL = "https://github.com/CSLUA-py/website";
 
+// Instagram URL. Empty = not shown.
+export const INSTAGRAM_URL = "https://www.instagram.com/csluaoficial/";
+
 export const LICENSE = {
   name: "AGPL-3.0",
   url: `${SOURCE_URL}/blob/main/LICENSE`,
