@@ -3,6 +3,8 @@ import { Link } from "react-router";
 import { LICENSE, SOURCE_URL } from "../../../config.js";
 import { UBUNTU_LOGO } from "./ubuntu-logo.js";
 import { EXTENSIONS } from "./extensions.js";
+import tuxWave from "./tux.svg";
+import catBomb from "./cat-bomb.svg";
 import "./pablo.css";
 
 // What `fastfetch` prints on Pablo's laptop (snapshot copied from the real terminal).
@@ -40,8 +42,7 @@ const LINK_LABELS = {
   dotfiles: "dotfiles",
 };
 
-// The 16 terminal colors (Nord-like, to match the Graphite theme). Color 0 equals the
-// terminal background, which is why it is invisible in the fastfetch color blocks.
+// The 16 terminal colors (Nord-like, to match the Graphite theme).
 const ANSI_NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"];
 const ANSI_NORMAL = ["#3c3c3c", "#bf616a", "#a3be8c", "#ebcb8b", "#81a1c1", "#b48ead", "#88c0d0", "#e5e9f0"];
 const ANSI_BRIGHT = ["#4c566a", "#d08770", "#b5d19c", "#f0d399", "#8fb3d6", "#c8a0c0", "#8fd3d6", "#eceff4"];
@@ -50,63 +51,18 @@ const ANSI_GROUPS = [
   { label: "bright", colors: ANSI_BRIGHT, offset: 8 },
 ];
 
-const DIRECTIONS = { h: "left", j: "down", k: "up", l: "right" };
-const MAX_HISTORY = 200;
-
-// The plain-text file the page "cats" with bat on load. It doubles as the key bindings
-// cheat sheet, so the columns are aligned with spaces (the terminal is monospaced).
-const HELP_FILE = "help.txt";
-const HELP_LINES = [
-  "Atajos de este escritorio",
-  "",
-  "Esc         salir del modo insert (hazlo primero)",
-  "i, Enter    escribir en la terminal",
-  "h j k l     moverte entre ventanas",
-  "1, 2        cambiar de workspace (el 2 tiene mis links, mi foto y mi setup)",
-  "← equipo    volver al equipo (barra de arriba)",
-];
-const MAX_LINE = 300;
-
-// GNOME-style (keyboard) directional focus: among the windows lying in that direction, prefer the
-// ones that overlap along the other axis, then the closest one.
-function pickNeighbor(rects, currentId, direction) {
-  const cur = rects[currentId];
-  if (!cur) return null;
-  const horizontal = direction === "left" || direction === "right";
-  const center = (r) => ({ x: (r.left + r.right) / 2, y: (r.top + r.bottom) / 2 });
-  const from = center(cur);
-  let best = null;
-  for (const [id, rect] of Object.entries(rects)) {
-    if (id === currentId) continue;
-    const to = center(rect);
-    const dx = to.x - from.x;
-    const dy = to.y - from.y;
-    const along = { right: dx, left: -dx, down: dy, up: -dy }[direction];
-    if (along <= 0) continue;
-    const overlap = horizontal
-      ? Math.min(cur.bottom, rect.bottom) - Math.max(cur.top, rect.top)
-      : Math.min(cur.right, rect.right) - Math.max(cur.left, rect.left);
-    const score = [overlap > 0 ? 0 : 1, along + Math.abs(horizontal ? dy : dx)];
-    if (!best || score[0] < best.score[0] || (score[0] === best.score[0] && score[1] < best.score[1])) {
-      best = { id, score };
-    }
-  }
-  return best ? best.id : null;
-}
-
 const WORKSPACES = [
-  { id: 1, name: "~", firstWindow: "term" },
+  { id: 1, name: "inicio", firstWindow: "term" },
   { id: 2, name: "setup", firstWindow: "links" },
 ];
 
 const WINDOW_TITLES = {
-  term: "ronanraw86@lamaquinaRambo: ~",
-  about: "about.md",
-  palette: "colors.lua",
-  links: "ronanraw86@lamaquinaRambo: ~/links",
-  media: "rambo.webp",
-  hardware: "hardware.md",
-  peripherals: "peripherals.md",
+  term: `${USER}@${HOST}: ~`,
+  about: "Acerca de",
+  palette: "Paleta de colores",
+  links: `${USER}@${HOST}: ~/links`,
+  hardware: "Hardware",
+  peripherals: "Periféricos",
   extensions: "Gestor de extensiones",
 };
 
@@ -119,10 +75,10 @@ function useClock() {
   return now;
 }
 
-function Win({ id, title, focus, onHover, register, children }) {
+function Win({ id, focus, onHover, children }) {
+  const title = WINDOW_TITLES[id];
   return (
     <section
-      ref={(el) => register(id, el)}
       className={`pablo-win pablo-${id}`}
       data-focused={focus === id}
       onMouseEnter={() => onHover(id)}
@@ -142,46 +98,28 @@ function Win({ id, title, focus, onHover, register, children }) {
   );
 }
 
-// An nvim buffer listing label/value rows, e.g. the hardware and peripherals windows.
-function KeyValueWin({ id, heading, file, rows, ...win }) {
+// A window listing label/value rows, e.g. hardware and peripherals.
+function KeyValueWin({ id, rows, ...win }) {
   return (
-    <Win id={id} title={WINDOW_TITLES[id]} {...win}>
-      <ol className="pablo-lines" style={keyColumn(rows)}>
-        <li><span className="pablo-h">{`# ${heading}`}</span></li>
-        <li />
+    <Win id={id} {...win}>
+      <dl className="pablo-rows" style={keyColumn(rows)}>
         {rows.map(([key, value]) => (
-          <li key={key}><span className="pablo-key">{key}</span><span>{value}</span></li>
+          <div key={key}>
+            <dt className="pablo-key">{key}</dt>
+            <dd>{value}</dd>
+          </div>
         ))}
-        <li />
-      </ol>
-      <p className="pablo-statusline">
-        <span className="pablo-mode">NORMAL</span> {file}
-      </p>
+      </dl>
     </Win>
   );
 }
 
-// fish-style highlighting for a command that was already run: valid command in pink,
-// file paths underlined.
-function HighlightedCommand({ command }) {
-  const [name, ...args] = command.split(" ");
-  return (
-    <>
-      <span className="pablo-cmd-name">{name}</span>
-      {args.map((arg, i) => (
-        <span key={i}>
-          {" "}
-          {/^(~|\.{0,2}\/|[\w-]+\.\w+$)/.test(arg) ? <span className="pablo-cmd-path">{arg}</span> : arg}
-        </span>
-      ))}
-    </>
-  );
-}
+const MAX_HISTORY = 200;
+const MAX_LINE = 300;
 
 // Starship prompt in the home directory: user@host in ~, then lambda and the command line.
-// `cursor` is "solid" while typing, "hollow" when the terminal is not receiving keys, and
-// omitted for lines that were already run (`highlight` colors those like fish does).
-function Starship({ command, cursor, highlight = false }) {
+// `output` is what the command printed. `children` goes after the command (the blinking cursor of the last prompt, for instance).
+function Starship({ command = "", output = null, children }) {
   return (
     <div className="pablo-starship">
       <p>
@@ -189,29 +127,29 @@ function Starship({ command, cursor, highlight = false }) {
         <span className="pablo-purple">~</span> took 0s
       </p>
       <p>
-        <span className="pablo-green">╰ λ</span>{" "}
-        <span className="pablo-typed">
-          {highlight ? <HighlightedCommand command={command} /> : command}
-        </span>
-        {cursor && <span className={`pablo-cursor pablo-cursor-${cursor}`} aria-hidden="true" />}
+        <span className="pablo-green">╰ λ</span> <span className="pablo-typed">{command}</span>
+        {children}
       </p>
+      {output && <pre className="pablo-output">{output}</pre>}
     </div>
   );
 }
 
-// bat's "full" style: grid rules, a File header, and a line-number gutter. A .txt file gets
-// no syntax highlighting, so lines are rendered as plain text.
-function Bat({ file, lines }) {
+function Swatches() {
   return (
-    <div className="pablo-bat">
-      <div className="pablo-bat-row pablo-bat-header">
-        <span className="pablo-bat-num" />
-        <span className="pablo-bat-text">File: {file}</span>
-      </div>
-      {lines.map((line, i) => (
-        <div className="pablo-bat-row" key={i}>
-          <span className="pablo-bat-num">{i + 1}</span>
-          <span className="pablo-bat-text">{line}</span>
+    <div className="pablo-palette-groups">
+      {ANSI_GROUPS.map(({ label, colors, offset }) => (
+        <div key={label}>
+          <p className="pablo-comment">{label} ({offset}-{offset + 7})</p>
+          <ul className="pablo-swatches" aria-label={`Colores ${label}`}>
+            {colors.map((hex, i) => (
+              <li key={hex}>
+                <span className="pablo-swatch" style={{ background: hex }} aria-hidden="true" />
+                <span className="pablo-swatch-name">{ANSI_NAMES[i]}</span>
+                <span className="pablo-swatch-hex">{hex}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       ))}
     </div>
@@ -252,119 +190,220 @@ function Extensions() {
   );
 }
 
-function Swatches() {
+// Easter eggs, triggered by commands typed in the terminal: a bare `cowsay` brings Tux, who waves,
+// and a fork bomb brings an exploding cat. Both are SVG drawings (the waving is animated in the SVG).
+function EggDialog({ egg, onClose }) {
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
+
+  const isTux = egg === "tux";
   return (
-    <div className="pablo-palette-groups">
-      {ANSI_GROUPS.map(({ label, colors, offset }) => (
-        <div key={label}>
-          <p className="pablo-comment">-- {label} ({offset}-{offset + 7})</p>
-          <ul className="pablo-swatches" aria-label={`Colores ${label}`}>
-            {colors.map((hex, i) => (
-              <li key={hex}>
-                <span className="pablo-swatch" style={{ background: hex }} aria-hidden="true" />
-                <span className="pablo-swatch-name">{ANSI_NAMES[i]}</span>
-                <span className="pablo-swatch-hex">{hex}</span>
-              </li>
-            ))}
-          </ul>
+    <div className="pablo-tux-backdrop" onClick={onClose}>
+      <div
+        className="pablo-tux"
+        role="dialog"
+        aria-label={isTux ? "Tux" : "Fork bomb"}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="pablo-headerbar">
+          <span className="pablo-headerbar-title">{isTux ? "tux@1985: ~" : "bash: fork: Resource temporarily unavailable"}</span>
+          <button type="button" className="pablo-tux-close" aria-label="Cerrar" onClick={onClose}>✕</button>
         </div>
-      ))}
+        <div className="pablo-tux-body">
+          {isTux ? (
+            <>
+              <img className="pablo-egg-art" src={tuxWave} alt="Tux waving" />
+              <p>Hi! I&apos;m Tux, you found my hideout!</p>
+            </>
+          ) : (
+            <>
+              <img className="pablo-egg-art pablo-bomb-art" src={catBomb} alt="An exploding cat" />
+              <p>You made a fork bomb!</p>
+              <p className="pablo-comment">{":(){ :|:& };:"} copied itself until the poor cat blew up.</p>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
+}
+
+const COW = String.raw`        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||`;
+const COW_WIDTH = 40;
+
+// Word-wraps `text` to `width` columns, breaking words that are longer than a line.
+function wrap(text, width) {
+  const lines = [];
+  let current = "";
+  for (const word of text.split(/\s+/).filter(Boolean)) {
+    let rest = word;
+    while (rest.length > width) {
+      if (current) lines.push(current);
+      lines.push(rest.slice(0, width));
+      rest = rest.slice(width);
+      current = "";
+    }
+    if (current && current.length + 1 + rest.length > width) {
+      lines.push(current);
+      current = rest;
+    } else {
+      current = current ? `${current} ${rest}` : rest;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+
+// What `cowsay "text"` prints: the speech bubble, then the cow.
+function cowsay(text) {
+  const lines = wrap(text, COW_WIDTH);
+  const width = Math.max(...lines.map((line) => line.length));
+  const pad = (line) => line.padEnd(width);
+  const body =
+    lines.length === 1
+      ? [`< ${pad(lines[0])} >`]
+      : lines.map((line, i) => {
+          const [left, right] = i === 0 ? ["/", "\\"] : i === lines.length - 1 ? ["\\", "/"] : ["|", "|"];
+          return `${left} ${pad(line)} ${right}`;
+        });
+  return [` ${"_".repeat(width + 2)}`, ...body, ` ${"-".repeat(width + 2)}`, COW].join("\n");
+}
+
+// What a command line does: nothing, print something, or open an easter egg. A bare `cowsay`
+// brings Tux and the fork bomb (matched ignoring spaces) brings an exploding cat.
+function run(line) {
+  const command = line.trim();
+  if (command.replace(/\s+/g, "") === ":(){:|:&};:") return { egg: "bomb" };
+  const cow = command.match(/^cowsay(?:\s+(.*))?$/);
+  if (!cow) return {};
+  const args = (cow[1] ?? "").trim();
+  const text = args.replace(/^(["'])(.*)\1$/, "$2").trim();
+  // A bare `cowsay` (nothing to say) brings Tux instead.
+  return text ? { output: cowsay(text) } : { egg: "tux" };
 }
 
 export default function PabloProfile({ member }) {
   const [workspace, setWorkspace] = useState(1);
   const [focus, setFocus] = useState("term");
-  // Vim-like: "insert" sends keys to the terminal, "normal" lets hjkl move between windows.
-  const [mode, setMode] = useState("insert");
+  const [egg, setEgg] = useState(null);
   const [history, setHistory] = useState([]);
   const [draft, setDraft] = useState("");
-  const windows = useRef({});
   const terminalEnd = useRef(null);
+  // Position in the command history while walking it with the arrows (null = the line being typed).
+  const recall = useRef(null);
+  const saved = useRef("");
   const now = useClock();
+  const typing = workspace === 1 && focus === "term" && !egg;
 
   const links = Object.entries(member.links).filter(([, url]) => url);
   const hardware = rowsOf(member.hardware);
   const peripherals = rowsOf(member.peripherals);
-  const typing = workspace === 1 && focus === "term" && mode === "insert";
-
-  const register = (id, el) => {
-    windows.current[id] = el;
-  };
-
-  // Mouse focus follows the pointer; entering the terminal this way lets you type right away.
-  const hover = (id) => {
-    setFocus(id);
-    if (id === "term") setMode("insert");
-  };
 
   const goTo = (id) => {
     const target = WORKSPACES.find((ws) => ws.id === id);
     if (!target) return;
     setWorkspace(target.id);
     setFocus(target.firstWindow);
-    setMode(target.firstWindow === "term" ? "insert" : "normal");
   };
 
+  // Left/right arrows switch workspace, like swiping between desktops.
   useEffect(() => {
     const onKeyDown = (event) => {
-      if (event.metaKey || event.ctrlKey || event.altKey || event.isComposing) return;
-      const target = event.target;
-      // Let Enter/Space activate a focused link or button.
-      if (
-        target instanceof HTMLElement &&
-        target.closest("a, button") &&
-        (event.key === "Enter" || event.key === " ")
-      ) {
-        return;
-      }
-
-      // Typing in the terminal: characters just appear, nothing is executed.
-      if (typing) {
-        if (event.key === "Escape") {
-          setMode("normal");
-        } else if (event.key === "Backspace") {
-          event.preventDefault();
-          setDraft((d) => d.slice(0, -1));
-        } else if (event.key === "Enter") {
-          event.preventDefault();
-          setHistory((h) => [...h, draft].slice(-MAX_HISTORY));
-          setDraft("");
-        } else if (event.key.length === 1) {
-          event.preventDefault();
-          setDraft((d) => (d.length < MAX_LINE ? d + event.key : d));
-        }
-        return;
-      }
-
-      if (focus === "term" && (event.key === "i" || event.key === "Enter")) {
+      if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey || event.isComposing) return;
+      if (event.key === "ArrowLeft" && workspace > 1) {
         event.preventDefault();
-        setMode("insert");
-        return;
-      }
-
-      const direction = DIRECTIONS[event.key];
-      if (direction) {
+        goTo(workspace - 1);
+      } else if (event.key === "ArrowRight" && workspace < WORKSPACES.length) {
         event.preventDefault();
-        const rects = {};
-        for (const [id, el] of Object.entries(windows.current)) {
-          if (el) rects[id] = el.getBoundingClientRect();
-        }
-        const next = pickNeighbor(rects, focus, direction);
-        if (next) {
-          setFocus(next);
-          if (next === "term") setMode("normal");
-        }
-        return;
+        goTo(workspace + 1);
       }
-
-      const ws = WORKSPACES.find((w) => String(w.id) === event.key);
-      if (ws) goTo(ws.id);
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   });
+
+  // Typing in the terminal: characters just appear, nothing is executed (only the easter egg commands do something).
+  // Up/down walk through the earlier commands, Shift+C copies and Shift+V pastes.
+  useEffect(() => {
+    if (!typing) return undefined;
+    const typeText = (text) => {
+      recall.current = null;
+      setDraft((d) => (d + text.replace(/[\r\n]+/g, " ")).slice(0, MAX_LINE));
+    };
+    const onKeyDown = (event) => {
+      if (event.metaKey || event.ctrlKey || event.altKey || event.isComposing) return;
+      const target = event.target;
+      // Let Enter/Space activate a focused link or button.
+      if (target instanceof HTMLElement && target.closest("a, button") && (event.key === "Enter" || event.key === " ")) {
+        return;
+      }
+      const commands = history.map((entry) => entry.command).filter((line) => line.trim());
+      if (event.shiftKey && event.key === "C") {
+        event.preventDefault();
+        // Copy the selected text if there is any, otherwise the line being typed.
+        const text = window.getSelection()?.toString() || draft;
+        if (text) navigator.clipboard?.writeText(text).catch(() => {});
+      } else if (event.shiftKey && event.key === "V") {
+        event.preventDefault();
+        navigator.clipboard?.readText().then(typeText).catch(() => {});
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        if (commands.length === 0) return;
+        if (recall.current === null) {
+          saved.current = draft;
+          recall.current = commands.length - 1;
+        } else {
+          recall.current = Math.max(0, recall.current - 1);
+        }
+        setDraft(commands[recall.current]);
+      } else if (event.key === "ArrowDown") {
+        event.preventDefault();
+        if (recall.current === null) return;
+        if (recall.current + 1 >= commands.length) {
+          recall.current = null;
+          setDraft(saved.current);
+        } else {
+          recall.current += 1;
+          setDraft(commands[recall.current]);
+        }
+      } else if (event.key === "Backspace") {
+        event.preventDefault();
+        recall.current = null;
+        setDraft((d) => d.slice(0, -1));
+      } else if (event.key === "Enter") {
+        event.preventDefault();
+        recall.current = null;
+        {
+          const { egg: found = null, output = null } = run(draft);
+          setEgg(found);
+          setHistory((h) => [...h, { command: draft, output }].slice(-MAX_HISTORY));
+        }
+        setDraft("");
+      } else if (event.key.length === 1) {
+        event.preventDefault();
+        typeText(event.key);
+      }
+    };
+    const onPaste = (event) => {
+      event.preventDefault();
+      typeText(event.clipboardData?.getData("text") ?? "");
+    };
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("paste", onPaste);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("paste", onPaste);
+    };
+  }, [typing, draft, history]);
 
   useEffect(() => {
     if (history.length === 0 && draft === "") return;
@@ -379,17 +418,17 @@ export default function PabloProfile({ member }) {
       <header className="pablo-bar">
         <nav className="pablo-bar-left" aria-label="Workspaces">
           <Link className="pablo-activities" to="/team">← Equipo</Link>
-          <span className="pablo-ws-dots">
+          <span className="pablo-ws-tabs">
             {WORKSPACES.map((ws) => (
               <button
                 key={ws.id}
                 type="button"
                 className="pablo-ws-btn"
                 aria-pressed={workspace === ws.id}
-                aria-label={`Workspace ${ws.id}: ${ws.name}`}
-                title={`${ws.id} ${ws.name}`}
                 onClick={() => goTo(ws.id)}
-              />
+              >
+                {ws.id} {ws.name}
+              </button>
             ))}
           </span>
         </nav>
@@ -404,9 +443,9 @@ export default function PabloProfile({ member }) {
 
       {workspace === 1 && (
         <div className="pablo-ws pablo-ws-1">
-          <Win id="term" title={WINDOW_TITLES.term} focus={focus} onHover={hover} register={register}>
+          <Win id="term" focus={focus} onHover={setFocus}>
             <div className="pablo-term-main">
-              <Starship command="fastfetch" highlight />
+              <Starship command="fastfetch" />
               <div className="pablo-fetch">
                 <pre className="pablo-logo" aria-hidden="true">{UBUNTU_LOGO}</pre>
                 <div className="pablo-info">
@@ -433,55 +472,45 @@ export default function PabloProfile({ member }) {
                   </div>
                 </div>
               </div>
-              <Starship command={`bat ${HELP_FILE}`} highlight />
-              <Bat file={HELP_FILE} lines={HELP_LINES} />
-              {history.map((line, i) => (
-                <Starship key={i} command={line} />
+              {history.map((entry, i) => (
+                <Starship key={i} command={entry.command} output={entry.output} />
               ))}
-              <Starship command={draft} cursor={typing ? "solid" : "hollow"} />
+              <Starship command={draft}>
+                <span className={`pablo-cursor${typing ? "" : " pablo-cursor-hollow"}`} aria-hidden="true" />
+              </Starship>
               <span ref={terminalEnd} />
             </div>
           </Win>
 
-          <Win id="about" title={WINDOW_TITLES.about} focus={focus} onHover={hover} register={register}>
-            <ol className="pablo-lines">
-              <li><span className="pablo-h">{`# ${member.name}`}</span></li>
-              <li />
-              {member.role && <li>{member.role} del CSLUA</li>}
+          <Win id="about" focus={focus} onHover={setFocus}>
+            <article className="pablo-about-text">
+              <h2>{member.name}</h2>
+              {member.role && <p>{member.role} del CSLUA</p>}
               {member.semester && member.degree && (
-                <li>Alumno del {member.semester} semestre de {member.degree}.</li>
+                <p>Alumno del {member.semester} semestre de {member.degree}.</p>
               )}
-              <li />
-              <li><span className="pablo-h">## Qué es esto</span></li>
-              <li>
-                Así se ve mi escritorio de todos los días: Ubuntu con GNOME, el tema Graphite en tonos nord y una terminal con Starship. Lo que ves es mi entorno real, copiado de mi propia máquina.
-              </li>
-              <li />
-              <li><span className="pablo-h">## Mi setup</span></li>
-              <li>
+              <h3>Qué es esto</h3>
+              <p>
+                Así se ve mi escritorio de todos los días: Ubuntu con GNOME, el tema Graphite en tonos nord y una terminal con Starship. Lo que ves es mi entorno real, copiado de mi propia máquina, con ropa de los años 80.
+              </p>
+              <h3>Mi setup</h3>
+              <p>
                 Uso Ubuntu junto con Windows 11, sobre una ASUS TUF Dash F15. Los datos de la terminal son una captura de mi fastfetch.
-              </li>
-              <li />
-            </ol>
-            <p className="pablo-statusline">
-              <span className="pablo-mode">NORMAL</span> about.md
-            </p>
+              </p>
+            </article>
           </Win>
 
-          <Win id="palette" title={WINDOW_TITLES.palette} focus={focus} onHover={hover} register={register}>
+          <Win id="palette" focus={focus} onHover={setFocus}>
             <Swatches />
-            <p className="pablo-statusline">
-              <span className="pablo-mode">NORMAL</span> colors.lua
-            </p>
           </Win>
         </div>
       )}
 
       {workspace === 2 && (
         <div className={`pablo-ws pablo-ws-2${hardware.length > 0 && peripherals.length > 0 ? " pablo-ws-2-split" : ""}`}>
-          <Win id="links" title={WINDOW_TITLES.links} focus={focus} onHover={hover} register={register}>
+          <Win id="links" focus={focus} onHover={setFocus}>
             <div className="pablo-term-main">
-              <Starship command="ls -l ~/links" highlight />
+              <Starship command="ls -l ~/links" />
               {links.length > 0 ? (
                 <ul className="pablo-ls">
                   {links.map(([key, url]) => (
@@ -495,39 +524,29 @@ export default function PabloProfile({ member }) {
               ) : (
                 <p>total 0</p>
               )}
-              <Starship command="" cursor="hollow" />
             </div>
           </Win>
 
-          <Win id="media" title={WINDOW_TITLES.media} focus={focus} onHover={hover} register={register}>
-            <div className="pablo-term-main pablo-media-main">
-              <Starship command="kitten icat rambo.webp" highlight />
-              <img className="pablo-media-img" src={`${import.meta.env.BASE_URL}team/rambo.webp`} alt="Foto de perfil de Pablo Ayala (Rambo)" />
-              <Starship command="" cursor="hollow" />
-            </div>
-          </Win>
-
-          <Win id="extensions" title={WINDOW_TITLES.extensions} focus={focus} onHover={hover} register={register}>
+          <Win id="extensions" focus={focus} onHover={setFocus}>
             <Extensions />
           </Win>
 
           {hardware.length > 0 && (
-            <KeyValueWin id="hardware" heading="Hardware" file="hardware.md" rows={hardware} focus={focus} onHover={hover} register={register} />
+            <KeyValueWin id="hardware" rows={hardware} focus={focus} onHover={setFocus} />
           )}
 
           {peripherals.length > 0 && (
-            <KeyValueWin id="peripherals" heading="Periféricos" file="peripherals.md" rows={peripherals} focus={focus} onHover={hover} register={register} />
+            <KeyValueWin id="peripherals" rows={peripherals} focus={focus} onHover={setFocus} />
           )}
         </div>
       )}
 
       <footer className="pablo-status">
-        <span className="pablo-mode">{workspace}</span>
-        <span>pablo.jsx</span>
-        {typing && <span className="pablo-insert">-- INSERT --</span>}
+        <span className="pablo-mode">{workspace}/{WORKSPACES.length}</span>
         <span className="pablo-status-right">
-          <span>{typing ? "esc: salir" : focus === "term" ? "i: escribir" : "hjkl: mover"}</span>
-          <span>1-{WORKSPACES.length}: workspace</span>
+          <span>←/→: workspace</span>
+          <span>↑/↓: historial</span>
+          <span>Shift+C/V: copiar/pegar</span>
           <a href={LICENSE.url} target="_blank" rel="noopener noreferrer">{LICENSE.name}</a>
           {SOURCE_URL && (
             <a href={SOURCE_URL} target="_blank" rel="noopener noreferrer">código fuente</a>
@@ -539,6 +558,8 @@ export default function PabloProfile({ member }) {
           )}
         </span>
       </footer>
+
+      {egg && <EggDialog egg={egg} onClose={() => setEgg(null)} />}
     </div>
   );
 }

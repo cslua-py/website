@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-label="Tux waving">
+  <style>
+    .wave { transform-origin: 110px 122px; animation: wave .5s ease-in-out infinite alternate; }
+    .hop { animation: hop 1s ease-in-out infinite alternate; }
+    .hello { animation: pop 1s steps(1) infinite; }
+    @keyframes wave { from { transform: rotate(18deg); } to { transform: rotate(-22deg); } }
+    @keyframes hop { from { transform: translateY(0); } to { transform: translateY(-5px); } }
+    @keyframes pop { 50% { opacity: .55; } }
+    @media (prefers-reduced-motion: reduce) { .wave, .hop, .hello { animation: none; } }
+  </style>
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ff2a9d" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#ff2a9d" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="160" cy="130" r="118" fill="url(#glow)"/>
+  <g class="hello">
+    <path transform="translate(320 0) scale(-1 1)" d="M222 14h86a8 8 0 0 1 8 8v34a8 8 0 0 1-8 8h-52l-14 14v-14h-20a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8z" fill="#fff" stroke="#1a0b3a" stroke-width="4" stroke-linejoin="round"/>
+    <text x="51" y="46" text-anchor="middle" font-family="monospace" font-weight="700" font-size="20" fill="#ff2a9d">Hello!</text>
+  </g>
+  <g class="hop" stroke="#1a0b3a" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <ellipse cx="128" cy="222" rx="30" ry="11" fill="#ffb000"/>
+    <ellipse cx="192" cy="222" rx="30" ry="11" fill="#ffb000"/>
+    <ellipse cx="210" cy="150" rx="13" ry="42" fill="#2b2b3d" transform="rotate(-14 210 150)"/>
+    <ellipse cx="160" cy="146" rx="62" ry="78" fill="#2b2b3d"/>
+    <ellipse cx="160" cy="68" rx="40" ry="44" fill="#2b2b3d"/>
+    <ellipse cx="160" cy="158" rx="42" ry="58" fill="#fff" stroke="none"/>
+    <ellipse cx="146" cy="60" rx="10" ry="12" fill="#fff" stroke-width="3"/>
+    <ellipse cx="174" cy="60" rx="10" ry="12" fill="#fff" stroke-width="3"/>
+    <circle cx="148" cy="62" r="4" fill="#1a0b3a" stroke="none"/>
+    <circle cx="172" cy="62" r="4" fill="#1a0b3a" stroke="none"/>
+    <path d="M142 78q18-8 36 0q-4 18-18 18t-18-18z" fill="#ffb000"/>
+    <path d="M146 86q14 4 28 0" fill="none" stroke-width="3"/>
+    <g class="wave">
+      <ellipse cx="88" cy="86" rx="12" ry="40" fill="#2b2b3d" transform="rotate(-28 88 86)"/>
+    </g>
+  </g>
+</svg>

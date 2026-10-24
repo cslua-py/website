@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-label="An exploding cat">
+  <polygon fill="#ff2a9d" points="160,4 188,52 244,22 236,80 298,78 262,126 316,160 252,170 270,226 208,196 178,238 150,192 96,230 100,176 36,190 62,142 6,104 70,92 48,36 112,60"/>
+  <polygon fill="#ff6c11" points="160,24 182,64 228,44 220,92 272,96 240,132 282,160 230,166 242,204 196,184 172,214 148,178 108,206 112,164 62,170 82,138 36,110 90,100 74,60 120,76"/>
+  <polygon fill="#ffd319" points="160,48 174,78 208,70 202,102 236,114 210,134 232,158 196,158 190,184 164,166 138,186 132,158 96,162 114,136 86,116 120,104 112,74 142,82"/>
+  <g stroke="#1a0b3a" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <polygon fill="#8f9aa8" points="108,96 116,52 148,84"/>
+    <polygon fill="#8f9aa8" points="212,96 204,52 172,84"/>
+    <polygon fill="#ff9ec7" stroke="none" points="118,88 120,68 136,84"/>
+    <polygon fill="#ff9ec7" stroke="none" points="202,88 200,68 184,84"/>
+    <ellipse fill="#8f9aa8" cx="160" cy="124" rx="56" ry="48"/>
+    <path fill="none" d="M128 108l16 12M144 108l-16 12M176 108l16 12M192 108l-16 12"/>
+    <ellipse fill="#1a0b3a" cx="160" cy="146" rx="14" ry="12"/>
+    <path fill="none" d="M160 136v-6M92 128l-34-8M92 138l-36 6M228 128l34-8M228 138l36 6"/>
+  </g>
+  <circle cx="160" cy="136" r="5" fill="#ff2a9d"/>
+  <g fill="#3a2a5e">
+    <circle cx="44" cy="52" r="14"/><circle cx="278" cy="46" r="18"/><circle cx="268" cy="196" r="12"/><circle cx="52" cy="194" r="16"/>
+  </g>
+  <g fill="#8f9aa8" stroke="#1a0b3a" stroke-width="3">
+    <polygon points="140,182 156,176 160,196 144,200"/>
+    <polygon points="170,180 188,184 184,202 168,196"/>
+  </g>
+</svg>

@@ -97,7 +97,7 @@ export const TEAM = [
       Gráficos: "NVIDIA GeForce RTX 3050 Ti Mobile",
       Memoria: "24 GB",
       Pantalla: "1920x1080, 144 Hz",
-      Almacenamiento: "336,25 GiB",
+      Almacenamiento: "1 TB",
     },
     peripherals: null,
     links: {
