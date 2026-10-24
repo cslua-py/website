@@ -1,0 +1,23 @@
+// Ubuntu logo as printed by `fastfetch --logo ubuntu`.
+export const UBUNTU_LOGO = [
+  "            .-/+oossssoo+/-.",
+  "        `:+ssssssssssssssssss+:`",
+  "      -+ssssssssssssssssssyyssss+-",
+  "    .ossssssssssssssssssdMMMNysssso.",
+  "   /ssssssssssshdmmNNmmyNMMMMhssssss/",
+  "  +sssssssshmydMMMMMMMNddddyssssssss+",
+  " /sssssssshNMMMyhhyyyyhmNMMMNhssssssss/",
+  ".ssssssssdMMMNhsssssssssshNMMMdssssssss.",
+  "+sssshhhyNMMNyssssssssssssyNMMMysssssss+",
+  "ossyNMMMNyMMhsssssssssssssshmmmhssssssso",
+  "ossyNMMMNyMMhsssssssssssssshmmmhssssssso",
+  "+sssshhhyNMMNyssssssssssssyNMMMysssssss+",
+  ".ssssssssdMMMNhsssssssssshNMMMdssssssss.",
+  " /sssssssshNMMMyhhyyyyhdNMMMNhssssssss/",
+  "  +sssssssssdmydMMMMMMMMddddyssssssss+",
+  "   /ssssssssssshdmNNNNmyNMMMMhssssss/",
+  "    .ossssssssssssssssssdMMMNysssso.",
+  "      -+sssssssssssssssssyyyssss+-",
+  "        `:+ssssssssssssssssss+:`",
+  "            .-/+oossssoo+/-.",
+].join("\n");

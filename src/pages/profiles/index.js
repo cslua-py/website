@@ -10,6 +10,7 @@ import { lazy } from "react";
 // slug (.fede-*) since stylesheets are global. profiles/ itself only holds shared code.
 export const PROFILES = {
   fede: lazy(() => import("./fede/FedeProfile.jsx")),
+  pablo: lazy(() => import("./pablo/PabloProfile.jsx")),
 };
 
 export const hasCustomProfile = (slug) => Object.hasOwn(PROFILES, slug);
