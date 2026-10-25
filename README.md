@@ -111,7 +111,7 @@ Quien no la hace usa el perfil estándar (`DefaultProfile.jsx`).
 
 ## Despliegue
 
-El sitio se publica en **Vercel**: cada `git push` a `main` despliega automáticamente.
+El sitio se publica en **Vercel**: cada cambio que se integra a `main` (mediante un pull request) despliega automáticamente.
 
 - `vercel.json` redirige todas las rutas a `index.html` para que `/team` o `/join` funcionen al recargar.
 - La variable `VITE_SITE_URL` (en Vercel: Settings, Environment Variables) debe tener la dirección pública del sitio, **sin barra final**. Se usa para la imagen de vista previa al compartir enlaces. Si cambia el dominio, actualizala y volvé a desplegar: se aplica al compilar.
@@ -121,6 +121,36 @@ El sitio se publica en **Vercel**: cada `git push` a `main` despliega automátic
 - **El código, los nombres de archivo y las rutas (URL) van en inglés.** Los textos que ve el visitante, en español.
 - Corré `npm run lint` antes de commitear.
 - Mensajes de commit en inglés, con título en imperativo (por ejemplo, `Add team profiles`).
+
+## Cómo aportar
+
+La rama `main` está protegida (regla `protect-main` de GitHub): **no se puede hacer push directo**. Todo cambio entra por pull request.
+
+1. Cloná el repositorio (o hacé un fork si no sos parte de la organización) y creá una rama desde `main`:
+   ```sh
+   git switch main
+   git pull
+   git switch -c add-team-profile
+   ```
+2. Hacé tus cambios y corré `npm run lint` y `npm run build` para comprobar que todo funciona.
+3. Commiteá siguiendo las [convenciones](#convenciones) y subí tu rama:
+   ```sh
+   git push -u origin add-team-profile
+   ```
+4. Abrí un pull request hacia `main` en GitHub, explicando qué cambia y por qué. Como se integra con *squash*, el título del PR pasa a ser el mensaje del commit en `main`: escribilo en inglés y en imperativo.
+5. Pedí una revisión. Hace falta **1 aprobación** y que todas las conversaciones del código estén resueltas.
+6. Cuando se apruebe e integre, Vercel despliega el sitio automáticamente.
+
+Lo que la protección de `main` impide:
+
+- Pushear directamente a `main`: hace falta un pull request.
+- Integrar sin aprobación: se necesita 1 aprobación, y si subís commits nuevos después de ser aprobado, la aprobación se descarta y hay que pedirla de nuevo.
+- Integrar con conversaciones sin resolver en el PR.
+- Integrar de otra forma que no sea *squash*: todos los commits de tu rama se combinan en uno solo.
+- Reescribir el historial con `git push --force`.
+- Borrar la rama `main`.
+
+Solo los administradores de la organización pueden saltarse estas reglas, y aun así únicamente a través de un pull request.
 
 ## Licencia
 
