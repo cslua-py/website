@@ -1,0 +1,30 @@
+export default {
+  name: "Fede Barrios",
+  group: "coordinators",
+  role: "Coordinador General",
+  order: 1,
+  degree: "Ingeniería en Informática",
+  semester: "noveno",
+  distro: "Garuda Linux",
+  desktop: "Hyprland",
+  hardware: {
+    Laptop: "ASUS Vivobook 14",
+    Procesador: "AMD Ryzen AI 7 350",
+    Gráficos: "AMD Radeon 860M Graphics",
+    Memoria: "15,09 GiB",
+    Pantalla: "1920x1200",
+    Almacenamiento: "476,9 GiB",
+  },
+  peripherals: {
+    Teclado: "Keychron K3 Max",
+    Mouse: "Keychron M6",
+    Auriculares: "JBL Tune 770NC",
+    "Adaptador de red": "AR9271",
+  },
+  links: {
+    github: "https://github.com/Fedebarriosd",
+    website: "https://fedebarriosd.com",
+    linkedin: "https://www.linkedin.com/in/federico-barrios-3ab481416",
+    instagram: "https://www.instagram.com/fedebarriosd",
+  },
+};

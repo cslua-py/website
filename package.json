@@ -12,8 +12,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "prebuild": "npm run check:members",
     "preview": "vite preview",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "check:members": "node scripts/check-members.js",
+    "new-member": "node scripts/new-member.js"
   },
   "dependencies": {
     "react": "^19.3.1",

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
-import { AUTHOR, LICENSE, SOURCE_URL } from "../../../config.js";
+import { AUTHOR, LICENSE, SOURCE_URL } from "../../config.js";
 import { GARUDA_LOGO } from "./garuda-logo.js";
 import selfie from "./selfie.webp";
 import "./fede.css";

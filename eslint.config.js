@@ -23,8 +23,8 @@ export default [
     },
   },
   {
-    // Config files run in Node, not in the browser.
-    files: ["eslint.config.js", "vite.config.js"],
+    // Config files and scripts run in Node, not in the browser.
+    files: ["eslint.config.js", "vite.config.js", "scripts/**/*.js"],
     languageOptions: { globals: globals.node },
   },
 ];

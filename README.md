@@ -22,7 +22,7 @@ Es software libre, bajo la licencia [AGPL-3.0-or-later](LICENSE).
 
 ## Stack
 
-React 19, Vite 8, React Router 8 y ESLint 9. Es un sitio estático: por ahora no tiene backend.
+React 19, Vite 8, React Router 8 y ESLint 9. Es un sitio estático: por ahora no tiene backend, pero el proyecto está pensado para sumar después Express y MongoDB (ver [`docs/architecture.md`](docs/architecture.md)).
 
 ## Puesta en marcha
 
@@ -41,70 +41,46 @@ npm run dev
 | `npm run build` | Genera la versión de producción en `dist/` |
 | `npm run preview` | Sirve `dist/` localmente para probarla |
 | `npm run lint` | Revisa el código con ESLint |
+| `npm run check:members` | Valida los datos de todos los integrantes (corre también en el CI y antes del build) |
+| `npm run new-member -- <slug>` | Crea tu carpeta en `src/members/` (con `--custom`, también una página propia) |
 
 ## Estructura
 
 ```
 .
-├── .github/workflows/       CI: corre lint y build en cada pull request
+├── .github/                 CI (lint, validación y build en cada pull request) y plantilla de PR
 ├── design/                  Fuente editable de la imagen para compartir (og-image.svg)
+├── docs/                    Documentación técnica (arquitectura y camino hacia MERN)
 ├── public/
 │   ├── docs/                PDF del reglamento
-│   ├── team/                Fotos del equipo
 │   └── …                    Favicon, apple-touch-icon y og-image
+├── scripts/                 Utilidades de Node: validar y crear integrantes
 ├── src/
 │   ├── assets/              Logo del club
 │   ├── components/          Menú, pie, tarjetas del equipo, etc.
-│   ├── data/team.js         Datos de los integrantes
+│   ├── data/                Carga y esquema de los integrantes
+│   ├── members/<slug>/      Todo lo de cada integrante: datos, foto y perfil propio
 │   ├── pages/               Una página por ruta
-│   │   └── profiles/        Perfiles de /team/<nombre> (ver más abajo)
 │   ├── config.js            Correo, enlaces externos y menú
-│   └── styles.css           Estilos generales
+│   └── styles.css           Estilos generales y tema claro/oscuro
+├── CONTRIBUTING.md          Guía para integrantes (agregar tu tarjeta, editar tu perfil)
 ├── vercel.json              Reglas para que las rutas funcionen al recargar
 └── .env                     Variable pública VITE_SITE_URL (sin secretos)
 ```
 
 ## Cómo editar el contenido
 
-### Agregar o editar a un integrante
+### Aparecer en /team y editar tu perfil
 
-Todo está en [`src/data/team.js`](src/data/team.js). Cada integrante es un objeto:
+Cada integrante tiene su carpeta en [`src/members/`](src/members/) y el sitio la detecta sola. Para sumarte:
 
-```js
-{
-  slug: "Alucard",                      // la URL será /team/alucard
-  group: "coordinators",              // "coordinators" o "collaborators"
-  name: "Alucard el gato",
-  role: "Coordinador Gatuno",        // null para colaboradores
-  photo: "alucard.jpg",                 // archivo dentro de public/team/, o null
-  degree: "Licenciado en maullar",
-  semester: "segundo",                 // se muestra "Alumno del segundo semestre de …"
-  distro: "Void linux",
-  desktop: "XFCE",
-  editor: "GNU Emacs",                       // null = no se muestra
-  terminal: "Kitty",
-  hardware: { Laptop: "…", Procesador: "…" },   // objeto etiqueta → valor, o texto, o null
-  peripherals: null,                  // igual que hardware
-  links: { github: "https://…", linkedin: null, instagram: null, website: null, dotfiles: null },
-  theme: catppuccin,
-}
+```sh
+npm run new-member -- tu-nombre     # crea src/members/tu-nombre/
 ```
 
-- Los campos en `null` simplemente no se muestran.
-- `hardware` y `peripherals` pueden ser un objeto `{ Etiqueta: "valor" }` (las etiquetas con espacios van entre comillas: `"Adaptador de red": "…"`) o un texto. En un perfil propio como el de Fede se muestran fila por fila, así que ahí conviene el objeto.
-- **Fotos:** guardalas en `public/team/`, cuadradas (unos 512 px) y livianas (JPG o WebP, idealmente menos de 100 kB). Sin foto, se muestran las iniciales.
-- Los integrantes aparecen en el orden en que están en el archivo, dentro de su grupo.
+Editás `member.js` con tus datos, sumás una foto si querés (`photo.jpg`) y abrís un pull request. Podés también reemplazar tu perfil por una **página totalmente propia** (la de Fede es un escritorio Hyprland): `npm run new-member -- tu-nombre --custom`.
 
-### Una página propia para tu perfil
-
-Cualquier integrante puede reemplazar su perfil por una página totalmente propia (la de Fede es un escritorio Hyprland con Gruvbox). Cada una vive en su carpeta:
-
-1. Creá `src/pages/profiles/<slug>/` con tu componente (`export default function ...({ member })`) y tu CSS.
-2. Prefijá tus clases CSS con tu nombre (`.pablo-*`): los estilos son globales y así no chocan con los de otros.
-3. Registrala en [`src/pages/profiles/index.js`](src/pages/profiles/index.js), con carga diferida (`lazy`) como las demás.
-4. La página reemplaza el menú y el pie del sitio, así que incluí un enlace de vuelta a `/team` y los enlaces a la licencia y al código fuente (mirá `profiles/fede/FedeProfile.jsx`).
-
-Quien no la hace usa el perfil estándar (`DefaultProfile.jsx`).
+La guía completa, paso a paso y pensada para quien nunca usó Git, está en [**CONTRIBUTING.md**](CONTRIBUTING.md).
 
 ### Enlaces y datos generales
 
@@ -125,35 +101,7 @@ El sitio se publica en **Vercel**: cada cambio que se integra a `main` (mediante
 
 ## Cómo aportar
 
-La rama `main` está protegida (regla `protect-main` de GitHub): **no se puede hacer push directo**. Todo cambio entra por pull request.
-
-1. Cloná el repositorio (o hacé un fork si no sos parte de la organización) y creá una rama desde `main`:
-   ```sh
-   git switch main
-   git pull
-   git switch -c add-team-profile
-   ```
-2. Hacé tus cambios y corré `npm run lint` y `npm run build` para comprobar que todo funciona.
-3. Commiteá siguiendo las [convenciones](#convenciones) y subí tu rama:
-   ```sh
-   git push -u origin add-team-profile
-   ```
-4. Abrí un pull request hacia `main` en GitHub, explicando qué cambia y por qué. Como se integra con *squash*, el título del PR pasa a ser el mensaje del commit en `main`: escribilo en inglés y en imperativo.
-5. Esperá a que el check **CI** (GitHub Actions) salga en verde: corre `npm run lint` y `npm run build`, lo mismo que en el paso 2. Si falla, corregilo y volvé a subir.
-6. Pedí una revisión. Hace falta **1 aprobación** y que todas las conversaciones del código estén resueltas.
-7. Cuando se apruebe e integre, Vercel despliega el sitio automáticamente.
-
-Lo que la protección de `main` impide:
-
-- Pushear directamente a `main`: hace falta un pull request.
-- Integrar sin aprobación: se necesita 1 aprobación, y si subís commits nuevos después de ser aprobado, la aprobación se descarta y hay que pedirla de nuevo.
-- Integrar con conversaciones sin resolver en el PR.
-- Integrar si el check **CI** falla.
-- Integrar de otra forma que no sea *squash*: todos los commits de tu rama se combinan en uno solo.
-- Reescribir el historial con `git push --force`.
-- Borrar la rama `main`.
-
-Solo los administradores de la organización pueden saltarse estas reglas, y aun así únicamente a través de un pull request.
+La rama `main` está protegida: **no se puede hacer push directo**, todo cambio entra por pull request, con el check **CI** en verde y **1 aprobación**. El procedimiento completo (clonar o hacer un fork, crear la rama, abrir el PR, qué hace la protección de `main` y qué hacer cuando algo falla) está en [**CONTRIBUTING.md**](CONTRIBUTING.md).
 
 ## Licencia
 

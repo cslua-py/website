@@ -1,0 +1,22 @@
+/* Styles for your profile page. Everything is scoped to your slug so it can't leak into other pages. */
+.__SLUG__ {
+  min-height: 100dvh;
+  padding: 48px 16px;
+  background: #fdf6e3;
+  color: #073642;
+  font-family: system-ui, sans-serif;
+  text-align: center;
+}
+.__SLUG__ a {
+  color: inherit;
+}
+.__SLUG__-photo {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.__SLUG__-links {
+  margin-top: 32px;
+  font-size: 0.9rem;
+}
