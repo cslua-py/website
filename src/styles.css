@@ -1,13 +1,18 @@
+/* light-dark(light, dark) follows the system unless <html data-theme> forces one (see ThemeToggle). */
 :root {
-  --ink: #333333;
-  --ink-soft: #5e5649;
+  color-scheme: light dark;
+  --ink: light-dark(#333333, #efe3c4);
+  --ink-soft: light-dark(#5e5649, #bdb092);
   --amber: #feb101;
-  --amber-deep: #8f5f00;
-  --paper: #f4ead2;
-  --paper-alt: #ecdfbd;
-  --card: #faf3df;
+  --amber-deep: light-dark(#8f5f00, #e8a820);
+  --paper: light-dark(#f4ead2, #1c1710);
+  --paper-alt: light-dark(#ecdfbd, #251e14);
+  --card: light-dark(#faf3df, #2b2418);
   --on-amber: #333333;
-  --line: #cbb98a;
+  --line: light-dark(#cbb98a, #4d4129);
+  --edge: light-dark(#333333, #7a6a47);
+  --footer-bg: light-dark(#333333, #0f0b06);
+  --logo-plate: light-dark(transparent, #f4ead2);
   --radius: 8px;
   --font:
     system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
@@ -15,6 +20,12 @@
   --font-serif:
     "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia,
     "Noto Serif", serif;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 * {
@@ -86,7 +97,7 @@ a {
   z-index: 50;
   background: color-mix(in srgb, var(--paper) 94%, transparent);
   backdrop-filter: blur(10px);
-  border-bottom: 4px double var(--ink);
+  border-bottom: 4px double var(--edge);
 }
 .header-bar {
   display: flex;
@@ -107,6 +118,7 @@ a {
 .menu {
   display: flex;
   gap: 26px;
+  margin-left: auto;
 }
 .menu a {
   text-decoration: none;
@@ -118,16 +130,27 @@ a {
 .menu a.active {
   border-bottom-color: var(--amber);
 }
-.nav-toggle {
-  display: none;
+.nav-toggle,
+.theme-toggle {
   background: none;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--edge);
   border-radius: 6px;
   padding: 6px 12px;
   font: inherit;
   font-weight: 600;
   color: var(--ink);
   cursor: pointer;
+}
+.nav-toggle {
+  display: none;
+}
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  padding: 6px 8px;
+}
+.theme-toggle:hover {
+  background: var(--paper-alt);
 }
 
 /* Buttons */
@@ -137,8 +160,8 @@ a {
   color: var(--on-amber);
   padding: 11px 22px;
   border-radius: 6px;
-  border: 2px solid var(--ink);
-  box-shadow: 3px 3px 0 var(--ink);
+  border: 2px solid var(--edge);
+  box-shadow: 3px 3px 0 var(--edge);
   font-weight: 700;
   text-decoration: none;
   transition:
@@ -147,14 +170,15 @@ a {
 }
 .btn:hover {
   transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 var(--ink);
+  box-shadow: 4px 4px 0 var(--edge);
 }
 .btn:active {
   transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0 var(--ink);
+  box-shadow: 1px 1px 0 var(--edge);
 }
 .btn-outline {
   background: var(--card);
+  color: var(--ink);
 }
 .btn-outline:hover {
   background: var(--paper-alt);
@@ -205,6 +229,13 @@ h1 {
   width: 100%;
   max-width: 380px;
   justify-self: center;
+}
+/* The toucan is dark, so in dark mode it sits on a cream plate like in the favicon. */
+.brand img,
+.hero-logo,
+.credit img {
+  background: var(--logo-plate);
+  border-radius: 20%;
 }
 
 /* Page head */
@@ -406,8 +437,8 @@ h3 {
 }
 .team-card:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0 var(--ink);
-  border-color: var(--ink);
+  box-shadow: 5px 5px 0 var(--edge);
+  border-color: var(--edge);
 }
 .team-card .avatar {
   margin-bottom: 12px;
@@ -429,7 +460,7 @@ h3 {
   flex: none;
 }
 img.avatar {
-  border: 2px solid var(--ink);
+  border: 2px solid var(--edge);
 }
 .avatar-lg {
   width: 128px;
@@ -445,7 +476,7 @@ img.avatar {
   background: var(--amber);
   color: var(--on-amber);
   font-weight: 800;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--edge);
 }
 .avatar-lg.avatar-initials {
   font-size: 2.4rem;
@@ -533,7 +564,7 @@ img.avatar {
 
 /* Footer */
 .footer {
-  background: var(--ink);
+  background: var(--footer-bg);
   color: #f4ead2;
   padding: 28px 0;
   font-size: 0.92rem;
@@ -584,8 +615,13 @@ img.avatar {
   }
   .nav-toggle {
     display: block;
+    order: 1;
+  }
+  .brand {
+    margin-right: auto;
   }
   .menu {
+    margin-left: 0;
     display: none;
     position: absolute;
     top: 64px;

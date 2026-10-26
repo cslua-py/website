@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, NavLink } from "react-router";
 import logo from "../assets/logo.svg";
 import { NAV } from "../config.js";
+import ThemeToggle from "./ThemeToggle.jsx";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -28,6 +29,7 @@ export default function Header() {
             </NavLink>
           ))}
         </nav>
+        <ThemeToggle />
       </div>
     </header>
   );

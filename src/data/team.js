@@ -18,7 +18,8 @@
 //   src/pages/profiles/index.js; everyone else gets DefaultProfile.
 // - `theme` (optional, DefaultProfile only) overrides the site's CSS variables on that member's profile
 //   page only. Available variables: --ink, --ink-soft, --amber, --amber-deep,
-//   --on-amber, --paper, --paper-alt, --card, --line.
+//   --on-amber, --paper, --paper-alt, --card, --line. A theme applies as written in both light and
+//   dark mode; the site's dark mode only affects profiles without a `theme` or a custom page.
 //   Profile pages use the sans-serif font; the rest of the site is serif.
 export const TEAM = [
   {
