@@ -6,13 +6,14 @@ function getInitials(name) {
     .join("");
 }
 
-export default function Avatar({ member, size = "md" }) {
+// Pass `alt=""` where the member's name is already next to the photo.
+export default function Avatar({ member, size = "md", alt = `Imagen de perfil de ${member.name}` }) {
   if (member.photo) {
     return (
       <img
         className={`avatar avatar-${size}`}
         src={`${import.meta.env.BASE_URL}team/${member.photo}`}
-        alt={`Imagen de perfil de ${member.name}`}
+        alt={alt}
       />
     );
   }
