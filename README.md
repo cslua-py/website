@@ -46,6 +46,7 @@ npm run dev
 
 ```
 .
+├── .github/workflows/       CI: corre lint y build en cada pull request
 ├── design/                  Fuente editable de la imagen para compartir (og-image.svg)
 ├── public/
 │   ├── docs/                PDF del reglamento
@@ -138,14 +139,16 @@ La rama `main` está protegida (regla `protect-main` de GitHub): **no se puede h
    git push -u origin add-team-profile
    ```
 4. Abrí un pull request hacia `main` en GitHub, explicando qué cambia y por qué. Como se integra con *squash*, el título del PR pasa a ser el mensaje del commit en `main`: escribilo en inglés y en imperativo.
-5. Pedí una revisión. Hace falta **1 aprobación** y que todas las conversaciones del código estén resueltas.
-6. Cuando se apruebe e integre, Vercel despliega el sitio automáticamente.
+5. Esperá a que el check **CI** (GitHub Actions) salga en verde: corre `npm run lint` y `npm run build`, lo mismo que en el paso 2. Si falla, corregilo y volvé a subir.
+6. Pedí una revisión. Hace falta **1 aprobación** y que todas las conversaciones del código estén resueltas.
+7. Cuando se apruebe e integre, Vercel despliega el sitio automáticamente.
 
 Lo que la protección de `main` impide:
 
 - Pushear directamente a `main`: hace falta un pull request.
 - Integrar sin aprobación: se necesita 1 aprobación, y si subís commits nuevos después de ser aprobado, la aprobación se descarta y hay que pedirla de nuevo.
 - Integrar con conversaciones sin resolver en el PR.
+- Integrar si el check **CI** falla.
 - Integrar de otra forma que no sea *squash*: todos los commits de tu rama se combinan en uno solo.
 - Reescribir el historial con `git push --force`.
 - Borrar la rama `main`.
