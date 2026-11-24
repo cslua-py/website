@@ -5,7 +5,7 @@ export const EMAIL = "clubdesoftwarelibre@gmail.com";
 export const JOIN_FORM_URL = "https://forms.gle/4vNJv9Qx4FTQhSeJ7";
 
 // Community group link (WhatsApp/Telegram/Discord). Empty = not shown.
-export const COMMUNITY_URL = "https://chat.whatsapp.com/D2v1tBN5niC2f48bzl6TBC";
+export const COMMUNITY_URL = "https://chat.whatsapp.com/JrXgD85MGCVJPgmCl9DpLh";
 
 // Source code repository. The AGPL (section 13) requires offering the source to users
 // who interact with the site over a network, so the footer links here.
